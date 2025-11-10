@@ -50,17 +50,19 @@ Oferecer uma solução completa e escalável para administração de bibliotecas
 
 Principais entidades:
 
-* `users` – clientes e funcionários
+* `users` – dados de autenticação
 * `books` – catálogo de livros
 * `loans` – empréstimos por exemplar
 * `payments` – registros de pagamentos (assinaturas e multas)
 * `subscriptions` – planos ativos dos clientes
+* `customers` – clientes que assinarão os planos
+* `employees` - empregados que criarão gêneros, livros, autores etc
 
 Relacionamentos:
 
-* **1:N** entre `users` → `loans`
+* **1:N** entre `customers` → `loans`
 * **1:N** entre `books` → `loans`
-* **1:N** entre `users` → `subscriptions`
+* **1:N** entre `customers` → `subscriptions`
 * **1:N** entre `subscriptions` → `payments`
 * **1:N** entre `loans` → `payments` (para multas)
 
