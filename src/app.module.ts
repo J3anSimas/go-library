@@ -1,0 +1,34 @@
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+
+@Module({
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true, // não precisa importar em cada módulo
+        }),
+
+        // 2️⃣ Configuração assíncrona do TypeORM
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule], // precisa importar o módulo de onde virá o ConfigService
+            inject: [ConfigService], // injeta o ConfigService no factory
+            useFactory: async (configService: ConfigService) => ({
+                type: 'postgres',
+                host: configService.get<string>('DB_HOST', 'localhost'),
+                port: configService.get<number>('DB_PORT', 5432),
+                username: configService.get<string>('DB_USER', 'postgres'),
+                password: configService.get<string>('DB_PASS', 'secret'),
+                database: configService.get<string>('DB_NAME', 'golibrary'),
+                autoLoadEntities: true, // carrega automaticamente todas as entidades registradas
+            }),
+        }),
+        AuthModule, UsersModule],
+    controllers: [AppController],
+    providers: [AppService],
+})
+export class AppModule { }
