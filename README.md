@@ -1,29 +1,100 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📚 Library Management System
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+O **Library Management System** é uma aplicação web projetada para gerenciar o fluxo de empréstimos, assinaturas e pagamentos de uma biblioteca moderna.
+O sistema permite que **clientes se cadastrem, assinem planos de uso e realizem empréstimos de livros**, controlando prazos, devoluções e possíveis multas de forma integrada.
 
-## Description
+### 🎯 **Objetivo**
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Oferecer uma solução completa e escalável para administração de bibliotecas, com foco em **experiência do usuário, rastreabilidade das transações e automação de regras de negócio**.
+
+---
+
+### 🏗️ **Principais funcionalidades**
+
+* **Autenticação e cadastro de usuários**
+
+  * Registro de clientes e empregados com confirmação por e-mail
+  * Login via e-mail/senha e OAuth (Google)
+
+* **Gestão de livros**
+
+  * Catálogo completo com categorias hierárquicas (analíticas e sintéticas)
+  * Controle de estoque por exemplar
+
+* **Empréstimos (Loans)**
+
+  * Cada livro emprestado gera um registro de *loan* vinculado ao cliente
+  * Controle de data de empréstimo, data prevista de devolução e status (`borrowed`, `returned`, `overdue`)
+  * Cálculo automático de multas por atraso
+
+* **Pagamentos**
+
+  * Integração com diferentes métodos de pagamento (PIX, cartão via maquininha, dinheiro)
+  * Registro de pagamentos tanto de **assinaturas** quanto de **multas**
+  * Associação entre `payments` e a entidade que originou a cobrança (`subscription`, `fine`)
+
+* **Assinaturas (Subscriptions)**
+
+  * Planos mensais ou anuais
+  * Controle de vigência e status de pagamento
+  * Relacionamento direto com usuários e histórico de transações
+
+* **Painel administrativo (opcional)**
+
+  * Gerenciamento de livros, clientes, empréstimos e pagamentos
+  * Relatórios de uso e estatísticas de multas e devoluções
+
+---
+
+### 🧩 **Modelagem de dados (visão geral)**
+
+Principais entidades:
+
+* `users` – clientes e funcionários
+* `books` – catálogo de livros
+* `loans` – empréstimos por exemplar
+* `payments` – registros de pagamentos (assinaturas e multas)
+* `subscriptions` – planos ativos dos clientes
+
+Relacionamentos:
+
+* **1:N** entre `users` → `loans`
+* **1:N** entre `books` → `loans`
+* **1:N** entre `users` → `subscriptions`
+* **1:N** entre `subscriptions` → `payments`
+* **1:N** entre `loans` → `payments` (para multas)
+
+---
+
+### 🛠️ **Stack recomendada**
+
+* **Backend:** Spring Boot (Java)
+* **Banco de dados:** PostgreSQL
+* **Containerização:** Docker Compose
+* **Frontend:** React (ou outro SPA moderno)
+* **Integração futura:** Redis (cache) e RabbitMQ (notificações de devolução e alertas de multa)
+
+---
+
+### 💡 **Diferenciais técnicos**
+
+* Arquitetura em camadas (domain → service → controller)
+* Boas práticas de modelagem e normalização
+* Suporte a múltiplos métodos de pagamento
+* Foco em extensibilidade e clareza de relacionamento entre entidades
+
+---
+
+### 🚀 **Possíveis extensões**
+
+* Envio automático de lembretes por e-mail/WhatsApp para devoluções
+* Geração de relatórios de performance de leitura e histórico de empréstimos
+* Módulo de recomendação de livros baseado no histórico de empréstimos
+
+---
+
+
 
 ## Project setup
 
