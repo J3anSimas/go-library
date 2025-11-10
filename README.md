@@ -1,7 +1,6 @@
 
-## 📚 Library Management System
-
-O **Library Management System** é uma aplicação web projetada para gerenciar o fluxo de empréstimos, assinaturas e pagamentos de uma biblioteca moderna.
+## 📚 GoLibrary
+O **GoLibrary** é uma aplicação web projetada para gerenciar o fluxo de empréstimos, assinaturas e pagamentos de uma biblioteca moderna.
 O sistema permite que **clientes se cadastrem, assinem planos de uso e realizem empréstimos de livros**, controlando prazos, devoluções e possíveis multas de forma integrada.
 
 ### 🎯 **Objetivo**
