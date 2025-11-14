@@ -7,13 +7,18 @@ import { jwtConstants } from './constants';
 
 @Module({
     imports: [UsersModule,
-        JwtModule.register({
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (config: ConfigService) => ({
             global: true,
-            secret: jwtConstants.secret,
+                secret: config.get<string>('JWT_SECRET'),
             signOptions: { expiresIn: '60s' }
+            })
         })
     ],
     controllers: [AuthController],
-    providers: [AuthService, UsersModule],
+    providers: [AuthService, UsersModule, JwtStrategy],
+    exports: [JwtModule]
 })
 export class AuthModule { }
