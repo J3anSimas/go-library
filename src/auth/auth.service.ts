@@ -19,12 +19,11 @@ export class AuthService {
         if (!user) {
             throw new UnauthorizedException();
         }
-        console.log(user)
         const isPasswordValid = await bcrypt.compare(loginRequestDto.password, user.password_hash);
         if (!isPasswordValid) {
             throw new UnauthorizedException();
         }
-        const payload = { sub: user.id, username: user.email, role: user.role };
+        const payload = { sub: user.id };
         return {
             // access_token: 'teste'
             access_token: await this.jwtService.signAsync(payload),

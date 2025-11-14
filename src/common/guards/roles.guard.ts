@@ -16,11 +16,10 @@ export class RolesGuard implements CanActivate {
         if (!requiredRoles) {
             return true;
         }
-        console.log('Rodando Roles Guard')
         const { user } = context.switchToHttp().getRequest();
-        console.log(user)
         if (!user)
             throw new UnauthorizedException()
-        return requiredRoles.some((role) => user.roles?.includes(role))
+        console.log(user)
+        return requiredRoles.some((role) => user.role?.includes(role))
     }
 }

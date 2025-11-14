@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
@@ -9,7 +9,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         super();
     }
     canActivate(context: ExecutionContext) {
-        console.log('JwtAuthGuard -> canActivate chamado');
+        // console.log('JwtAuthGuard -> canActivate chamado');
         const isPublic = this.reflector.getAllAndOverride('isPublic', [
             context.getHandler(),
             context.getClass(),
@@ -19,7 +19,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     }
     handleRequest(err, user, info) {
-        console.log('JwtAuthGuard -> handleRequest', { err, user, info });
+        if (err) {
+            throw new UnauthorizedException();
+        }
         return user;
     }
 }
