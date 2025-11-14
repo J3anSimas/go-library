@@ -11,6 +11,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     imports: [
         ConfigModule.forRoot({
             isGlobal: true, // não precisa importar em cada módulo
+            ignoreEnvFile: process.env.NODE_ENV !== 'development',
+            envFilePath: process.env.NODE_ENV === 'development' ? '.env' : undefined,
         }),
 
         // 2️⃣ Configuração assíncrona do TypeORM
