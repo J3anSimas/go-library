@@ -25,6 +25,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
                 password: configService.get<string>('DB_PASS', 'secret'),
                 database: configService.get<string>('DB_NAME', 'golibrary'),
                 autoLoadEntities: true, // carrega automaticamente todas as entidades registradas
+                migrations: [`${__dirname}/migrations/{.ts, *.js}`],
+                migrationsRun: true
             }),
         }),
         AuthModule, UsersModule],
