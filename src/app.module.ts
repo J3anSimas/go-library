@@ -5,6 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { GuardsModule } from './common/modules/guards.module';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 
 
 @Module({
@@ -31,8 +35,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
                 migrationsRun: true
             }),
         }),
-        AuthModule, UsersModule],
+        AuthModule, UsersModule, GuardsModule],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }, { provide: APP_GUARD, useClass: RolesGuard }],
 })
 export class AppModule { }

@@ -12,9 +12,9 @@ import { JwtStrategy } from './strategies/jwt.strategy';
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: (config: ConfigService) => ({
-            global: true,
+                global: true,
                 secret: config.get<string>('JWT_SECRET'),
-            signOptions: { expiresIn: '60s' }
+                signOptions: { expiresIn: '60s' }
             })
         })
     ],
