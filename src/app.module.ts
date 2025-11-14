@@ -31,7 +31,7 @@ import { RolesGuard } from './common/guards/roles.guard';
                 password: configService.get<string>('DB_PASS', 'secret'),
                 database: configService.get<string>('DB_NAME', 'golibrary'),
                 autoLoadEntities: true, // carrega automaticamente todas as entidades registradas
-                migrations: [`${__dirname}/migrations/{.ts, *.js}`],
+                migrations: [`${__dirname}/migrations/{.ts,*.js}`],
                 migrationsRun: true
             }),
         }),
