@@ -10,9 +10,9 @@ export class CreateEmployeesTable1763551590418 implements MigrationInterface {
                 "registration_code" varchar NOT NULL,
                 "photo_url" varchar NOT NULL,
                 "user_id" uuid NOT NULL,
-                "created_by" uuid NOT NULL,
+                "created_by" uuid,
                 "created_at" timestamptz NOT NULL DEFAULT (now()),
-                "update_at" timestamptz NOT NULL DEFAULT (now())
+                "updated_at" timestamptz NOT NULL DEFAULT (now())
             );
 
                 ALTER TABLE "employees" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
