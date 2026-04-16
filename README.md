@@ -1,170 +1,83 @@
+# go-library
 
-## 📚 GoLibrary
-O **GoLibrary** é uma aplicação web projetada para gerenciar o fluxo de empréstimos, assinaturas e pagamentos de uma biblioteca moderna.
-O sistema permite que **clientes se cadastrem, assinem planos de uso e realizem empréstimos de livros**, controlando prazos, devoluções e possíveis multas de forma integrada.
+REST API built with NestJS for managing a library system with employees, users, and file storage.
 
-### 🎯 **Objetivo**
+## Stack
 
-Oferecer uma solução completa e escalável para administração de bibliotecas, com foco em **experiência do usuário, rastreabilidade das transações e automação de regras de negócio**.
+- **NestJS** + TypeScript
+- **PostgreSQL** — main database (TypeORM + migrations)
+- **MinIO** — S3-compatible object storage for file uploads
+- **JWT** — authentication
 
----
-
-### 🏗️ **Principais funcionalidades**
-
-* **Autenticação e cadastro de usuários**
-
-  * Registro de clientes e empregados com confirmação por e-mail
-  * Login via e-mail/senha e OAuth (Google)
-
-* **Gestão de livros**
-
-  * Catálogo completo com categorias hierárquicas (analíticas e sintéticas)
-  * Controle de estoque por exemplar
-
-* **Empréstimos (Loans)**
-
-  * Cada livro emprestado gera um registro de *loan* vinculado ao cliente
-  * Controle de data de empréstimo, data prevista de devolução e status (`borrowed`, `returned`, `overdue`)
-  * Cálculo automático de multas por atraso
-
-* **Pagamentos**
-
-  * Integração com diferentes métodos de pagamento (PIX, cartão via maquininha, dinheiro)
-  * Registro de pagamentos tanto de **assinaturas** quanto de **multas**
-  * Associação entre `payments` e a entidade que originou a cobrança (`subscription`, `fine`)
-
-* **Assinaturas (Subscriptions)**
-
-  * Planos mensais ou anuais
-  * Controle de vigência e status de pagamento
-  * Relacionamento direto com usuários e histórico de transações
-
-* **Painel administrativo (opcional)**
-
-  * Gerenciamento de livros, clientes, empréstimos e pagamentos
-  * Relatórios de uso e estatísticas de multas e devoluções
-
----
-
-### 🧩 **Modelagem de dados (visão geral)**
-
-Principais entidades:
-
-* `users` – dados de autenticação
-* `books` – catálogo de livros
-* `loans` – empréstimos por exemplar
-* `payments` – registros de pagamentos (assinaturas e multas)
-* `subscriptions` – planos ativos dos clientes
-* `customers` – clientes que assinarão os planos
-* `employees` - empregados que criarão gêneros, livros, autores etc
-
-Relacionamentos:
-
-* **1:N** entre `customers` → `loans`
-* **1:N** entre `books` → `loans`
-* **1:N** entre `customers` → `subscriptions`
-* **1:N** entre `subscriptions` → `payments`
-* **1:N** entre `loans` → `payments` (para multas)
-
----
-
-### 🛠️ **Stack recomendada**
-
-* **Backend:** Spring Boot (Java)
-* **Banco de dados:** PostgreSQL
-* **Containerização:** Docker Compose
-* **Frontend:** React (ou outro SPA moderno)
-* **Integração futura:** Redis (cache) e RabbitMQ (notificações de devolução e alertas de multa)
-
----
-
-### 💡 **Diferenciais técnicos**
-
-* Arquitetura em camadas (domain → service → controller)
-* Boas práticas de modelagem e normalização
-* Suporte a múltiplos métodos de pagamento
-* Foco em extensibilidade e clareza de relacionamento entre entidades
-
----
-
-### 🚀 **Possíveis extensões**
-
-* Envio automático de lembretes por e-mail/WhatsApp para devoluções
-* Geração de relatórios de performance de leitura e histórico de empréstimos
-* Módulo de recomendação de livros baseado no histórico de empréstimos
-
----
-
-
-
-## Project setup
+## How to run
 
 ```bash
-$ npm install
+# Start dependencies (PostgreSQL + MinIO)
+docker compose up -d
+
+# Install dependencies
+npm install
+
+# Run migrations
+npm run typeorm migration:run
+
+# Start development server
+npm run start:dev
 ```
 
-## Compile and run the project
+The API will be available at `http://localhost:3000`.
 
-```bash
-# development
-$ npm run start
+### MinIO Console
+Access the MinIO web console at `http://localhost:9001`  
+Default credentials: `minioadmin / minioadmin`
 
-# watch mode
-$ npm run start:dev
+## Modules
 
-# production mode
-$ npm run start:prod
+- **Auth** — login, JWT token generation
+- **Users** — user registration and management
+- **Employees** — employee management with photo upload to S3
+
+## ER Diagram
+
+```mermaid
+erDiagram
+    users {
+        uuid id PK
+        varchar email
+        text password_hash
+        boolean is_verified
+        boolean is_active
+        varchar role
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    employees {
+        uuid id PK
+        varchar name
+        varchar registration_code
+        varchar photo_url
+        uuid user_id FK
+        uuid created_by FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    users ||--o{ employees : "has"
+    employees ||--o{ employees : "created_by"
 ```
 
-## Run tests
+## Environment variables
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Variable | Description |
+|---|---|
+| `DB_HOST` | PostgreSQL host |
+| `DB_PORT` | PostgreSQL port |
+| `DB_USER` | PostgreSQL user |
+| `DB_PASS` | PostgreSQL password |
+| `DB_NAME` | Database name |
+| `JWT_SECRET` | JWT signing secret |
+| `AWS_ACCESS_KEY_ID` | MinIO access key |
+| `AWS_SECRET_ACCESS_KEY` | MinIO secret key |
+| `AWS_BUCKET_NAME` | S3 bucket name |
+| `AWS_ENDPOINT` | MinIO endpoint URL |
